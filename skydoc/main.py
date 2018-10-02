@@ -46,8 +46,12 @@ CSS_FILE = 'main.css'
 
 def _create_jinja_environment(runfiles, site_root, link_ext):
   def _Load(path):
-    return runfiles.Rlocation(posixpath.join(WORKSPACE_DIR, TEMPLATE_PATH,
-                                             path))
+    rloc = runfiles.Rlocation(posixpath.join(WORKSPACE_DIR, TEMPLATE_PATH,
+                                              path))
+    if rloc:
+      with open(rloc, "rb") as f:
+        return f.read().decode("utf-8")
+    return None
 
   env = jinja2.Environment(
       loader=jinja2.FunctionLoader(_Load),
